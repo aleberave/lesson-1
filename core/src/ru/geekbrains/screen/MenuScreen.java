@@ -73,6 +73,8 @@ public class MenuScreen extends Base2DScreen {
                 break;
             case 22: v.set(1, 0);
                 break;
+            default: ;
+                break;
         }
         System.out.println("keyDown keycode = " + keycode);
         return false;
