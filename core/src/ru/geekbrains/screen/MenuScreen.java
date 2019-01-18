@@ -38,16 +38,7 @@ public class MenuScreen extends Base2DScreen {
         batch.draw(background, 0, 0);
         batch.draw(img, pos.x, pos.y);
         batch.end();
-//        if(Gdx.graphics.getHeight() - 256 > pos.x && Gdx.graphics.getHeight() - 256 > pos.y){
-//            pos.add(v);
-//        }
         pos.add(v);
-//        if(pos.x == touch.x && pos.y == touch.y){
-//            pos.set(touch);
-//        } else
-//        if(pos.x != touch.x && pos.y != touch.y) {
-//            pos.add(v);
-//        }
     }
 
     @Override
@@ -69,5 +60,23 @@ public class MenuScreen extends Base2DScreen {
         v = touch.sub(pos);
         v.nor();
         return super.touchDown(screenX, screenY, pointer, button);
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        switch (keycode){
+            case 19: v.set(0,1);
+                break;
+            case 20: v.set(0,-1);
+                break;
+            case 21: v.set(-1, 0);
+                break;
+            case 22: v.set(1, 0);
+                break;
+            default: ;
+                break;
+        }
+        System.out.println("keyDown keycode = " + keycode);
+        return false;
     }
 }
