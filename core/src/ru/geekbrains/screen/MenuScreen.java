@@ -38,7 +38,9 @@ public class MenuScreen extends Base2DScreen {
         batch.draw(background, 0, 0);
         batch.draw(img, pos.x, pos.y);
         batch.end();
-        pos.add(v);
+        if((int)(Math.abs(touch.len() - pos.len())) < 0.0001) {
+            v.set(0,0);
+        } else pos.add(v);
     }
 
     @Override
@@ -59,6 +61,7 @@ public class MenuScreen extends Base2DScreen {
         touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
         v = touch.sub(pos);
         v.nor();
+        touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
