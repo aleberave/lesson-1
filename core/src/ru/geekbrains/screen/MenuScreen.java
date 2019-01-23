@@ -28,10 +28,9 @@ public class MenuScreen extends Base2DScreen {
         background = new Texture("bg.png");
         img = new Texture("badlogic.jpg");
         pos = new Vector2(-0.5f, -0.5f);
-        v = new Vector2(0.0f, 0.0f);
-        tou = new Vector2(0.0f, 0.0f);
-        buf = new Vector2(0.0f, 0.0f);
-        buf.set(getTouch2());
+        v = new Vector2(0, 0);
+        tou = new Vector2(0,0);
+        buf = new Vector2(0, 0);
     }
 
     @Override
@@ -41,7 +40,6 @@ public class MenuScreen extends Base2DScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         buf.set(tou);
-        buf.sub(pos).len();
         if(buf.sub(pos).len() > V_LEN) {
             pos.add(v);
         } else pos.set(tou);
@@ -71,16 +69,10 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("BUF ==== " + buf.x + ", " + buf.y);
-        tou.set(getTouch2());
-        System.out.println("getTouch2.x = " + getTouch2().x + ", touch.y = " + getTouch2().y);
+        super.touchDown(screenX, screenY, pointer, button);
+        tou.set(getTouch());
         v.set(tou.cpy().sub(pos).setLength(V_LEN));
-        System.out.println(" v = " + v);
-//        System.out.println("touchDown " + screenX + " " + (Gdx.graphics.getHeight() - screenY));
-//        touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
-//        v = touch.sub(pos);
-//        v.nor();
-//        touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+        System.out.println("touchDown2 touch.x = " + tou.x + " touch.y = " + tou.y);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 

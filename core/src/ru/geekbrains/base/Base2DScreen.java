@@ -24,10 +24,9 @@ public class Base2DScreen implements Screen, InputProcessor {
     private Matrix3 screenToWorlds;
 
     private Vector2 touch;
-    private Vector2 touch2;
 
-    public Vector2 getTouch2() {
-        return touch2;
+    public Vector2 getTouch() {
+        return touch;
     }
 
     @Override
@@ -41,7 +40,6 @@ public class Base2DScreen implements Screen, InputProcessor {
         this.worldToGl = new Matrix4();
         this.screenToWorlds = new Matrix3();
         touch = new Vector2();
-        touch2 = new Vector2();
     }
 
     @Override
@@ -136,7 +134,6 @@ public class Base2DScreen implements Screen, InputProcessor {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
 //        System.out.println("touchDragged screenX = " + screenX + " screenY = " + screenY);
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorlds);
-        touch2.set(touch);
         touchDragged(touch, pointer);
         return false;
     }
