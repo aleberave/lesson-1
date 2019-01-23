@@ -63,15 +63,15 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        tou.set(touch);
+        tou.set(getTouch());
+        v.set(tou.cpy().sub(pos).setLength(V_LEN));
         return super.touchDown(touch, pointer);
     }
 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        super.touchDown(screenX, screenY, pointer, button);
-        tou.set(getTouch());
-        v.set(tou.cpy().sub(pos).setLength(V_LEN));
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
