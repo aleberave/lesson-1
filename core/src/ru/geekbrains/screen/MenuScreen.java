@@ -10,23 +10,21 @@ import ru.geekbrains.base.Base2DScreen;
 
 public class MenuScreen extends Base2DScreen {
 
-    SpriteBatch batch;
+    private static final float V_LEN = 2.5f;
+
     Texture img;
     Texture background;
 
     Vector2 pos;
-    Vector2 touch;
     Vector2 v;
 
     @Override
     public void show() {
         super.show();
-        batch = new SpriteBatch();
         background = new Texture("bg.png");
         img = new Texture("badlogic.jpg");
-        pos = new Vector2(0, 0);
-        v = new Vector2(1,1);
-        touch = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        pos = new Vector2(-0.5f, -0.5f);
+        v = new Vector2(0.002f, 0.002f);
     }
 
     @Override
@@ -35,12 +33,13 @@ public class MenuScreen extends Base2DScreen {
         Gdx.gl.glClearColor(0.5f, 0.2f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(background, 0, 0);
-        batch.draw(img, pos.x, pos.y);
+        batch.draw(background, -0.5f, -0.5f, 1f, 1f);
+        batch.draw(img, pos.x, pos.y, 0.5f, 0.5f);
         batch.end();
-        if((int)(Math.abs(touch.len() - pos.len())) < 0.0001) {
-            v.set(0,0);
-        } else pos.add(v);
+        pos.add(v);
+//        if((int)(Math.abs(touch.len() - pos.len())) < 0.0001) {
+//            v.set(0,0);
+//        } else pos.add(v);
     }
 
     @Override
@@ -50,18 +49,23 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public void dispose() {
-        batch.dispose();
         img.dispose();
         super.dispose();
     }
 
     @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return super.touchDown(touch, pointer);
+    }
+
+
+    @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("touchDown " + screenX + " " + (Gdx.graphics.getHeight() - screenY));
-        touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
-        v = touch.sub(pos);
-        v.nor();
-        touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+//        System.out.println("touchDown " + screenX + " " + (Gdx.graphics.getHeight() - screenY));
+//        touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+//        v = touch.sub(pos);
+//        v.nor();
+//        touch = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
