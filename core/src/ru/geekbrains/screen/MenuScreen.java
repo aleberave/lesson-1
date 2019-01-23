@@ -72,7 +72,6 @@ public class MenuScreen extends Base2DScreen {
         super.touchDown(screenX, screenY, pointer, button);
         tou.set(getTouch());
         v.set(tou.cpy().sub(pos).setLength(V_LEN));
-        System.out.println("touchDown2 touch.x = " + tou.x + " touch.y = " + tou.y);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
