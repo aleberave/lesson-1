@@ -60,9 +60,7 @@ public class Rect {
         halfHeight = from.halfHeight;
     }
 
-    public void setLeft(float left) {
-        pos.x = left + halfWidth;
-    }
+    public void setLeft(float left) { pos.x = left + halfWidth; }
 
     public void setTop(float top) {
         pos.y = top - halfHeight;
