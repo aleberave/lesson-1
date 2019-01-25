@@ -12,14 +12,17 @@ import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.sprite.menu.TouchExit;
+import ru.geekbrains.sprite.menu.TouchPlay;
 
 public class MenuScreen extends Base2DScreen {
 
     private TextureAtlas atlas;
     private Texture bg;
     private Background background;
-    private Star[] star;
+    private Star star[];
     private TouchExit btExit;
+    private TouchPlay btPlay;
+
 
     @Override
     public void show() {
@@ -32,6 +35,7 @@ public class MenuScreen extends Base2DScreen {
             star[i] = new Star(atlas);
         }
         btExit = new TouchExit(atlas);
+        btPlay = new TouchPlay(atlas);
     }
 
     @Override
@@ -41,13 +45,13 @@ public class MenuScreen extends Base2DScreen {
         draw();
     }
 
-    public void update(float delta){
+    public void update(float delta) {
         for (int i = 0; i < star.length; i++) {
             star[i].update(delta);
         }
     }
 
-    public void draw(){
+    public void draw() {
         Gdx.gl.glClearColor(0.5f, 0.2f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
@@ -56,6 +60,7 @@ public class MenuScreen extends Base2DScreen {
             star[i].draw(batch);
         }
         btExit.draw(batch);
+        btPlay.draw(batch);
         batch.end();
     }
 
@@ -65,25 +70,33 @@ public class MenuScreen extends Base2DScreen {
         for (int i = 0; i < star.length; i++) {
             star[i].resize(worldBounds);
         }
-        btExit.resize(worldBounds);
-    }
-
-    @Override
-    public void hide() {
-        dispose();
-        super.hide();
     }
 
     @Override
     public void dispose() {
         bg.dispose();
         atlas.dispose();
-        batch.dispose();
         super.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        btExit.touchDown(touch, pointer);
+        btPlay.touchDown(touch, pointer);
         return super.touchDown(touch, pointer);
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        btExit.touchUp(touch, pointer);
+        btPlay.touchUp(touch, pointer);
+        return super.touchUp(touch, pointer);
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        bg.dispose();
+        atlas.dispose();
     }
 }

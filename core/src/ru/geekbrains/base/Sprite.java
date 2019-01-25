@@ -14,7 +14,7 @@ public class Sprite extends Rect {
     protected int frame;
 
     public Sprite(TextureRegion region) {
-        if (regions == null){
+        if (region == null){
             throw new NullPointerException("Create Sprite with null region");
         }
         regions = new TextureRegion[1];

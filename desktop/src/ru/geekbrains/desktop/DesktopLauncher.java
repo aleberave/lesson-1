@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		float aspect = 3f / 4f;
 		config.width = 400;
 		config.height = (int) (config.width / aspect);
-		config.resizable = false; // нельзя изменять размер экрана
+//		config.resizable = false; // нельзя изменять размер экрана
 		new LwjglApplication(new Lesson4HW(), config);
 	}
 }
