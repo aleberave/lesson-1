@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import ru.geekbrains.screen.MenuScreen;
 
-public class Lesson2HW extends Game {
-	@Override
-	public void create() {
-		setScreen(new MenuScreen());
-	}
+public class Lesson3HW extends Game {
+    @Override
+    public void create() {
+        setScreen(new MenuScreen());
+    }
 }
