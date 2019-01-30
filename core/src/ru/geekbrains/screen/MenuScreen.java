@@ -1,6 +1,8 @@
 package ru.geekbrains.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,22 +13,31 @@ import ru.geekbrains.base.Base2DScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Star;
-import ru.geekbrains.sprite.menu.TouchExit;
-import ru.geekbrains.sprite.menu.TouchPlay;
+import ru.geekbrains.sprite.menu.ButtonExit;
+import ru.geekbrains.sprite.menu.ButtonPlay;
 
 public class MenuScreen extends Base2DScreen {
+
+    private Game game;
 
     private TextureAtlas atlas;
     private Texture bg;
     private Background background;
     private Star star[];
-    private TouchExit btExit;
-    private TouchPlay btPlay;
+    private ButtonExit buttonExit;
+    private ButtonPlay buttonPlay;
 
+    public MenuScreen(Game game) {
+        this.game = game;
+    }
+    private Sound sound;
 
     @Override
     public void show() {
         super.show();
+        sound = Gdx.audio.newSound(Gdx.files.internal("music/charm.mp3"));
+        sound.play(0.5f);
+        sound.loop();
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
@@ -34,8 +45,8 @@ public class MenuScreen extends Base2DScreen {
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
-        btExit = new TouchExit(atlas);
-        btPlay = new TouchPlay(atlas);
+        buttonExit = new ButtonExit(atlas);
+        buttonPlay = new ButtonPlay(atlas, game);
     }
 
     @Override
@@ -59,8 +70,8 @@ public class MenuScreen extends Base2DScreen {
         for (int i = 0; i < star.length; i++) {
             star[i].draw(batch);
         }
-        btExit.draw(batch);
-        btPlay.draw(batch);
+        buttonExit.draw(batch);
+        buttonPlay.draw(batch);
         batch.end();
     }
 
@@ -70,33 +81,29 @@ public class MenuScreen extends Base2DScreen {
         for (int i = 0; i < star.length; i++) {
             star[i].resize(worldBounds);
         }
+        buttonExit.resize(worldBounds);
+        buttonPlay.resize(worldBounds);
     }
 
     @Override
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        sound.dispose();
         super.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        btExit.touchDown(touch, pointer);
-        btPlay.touchDown(touch, pointer);
+        buttonExit.touchDown(touch, pointer);
+        buttonPlay.touchDown(touch, pointer);
         return super.touchDown(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        btExit.touchUp(touch, pointer);
-        btPlay.touchUp(touch, pointer);
+        buttonExit.touchUp(touch, pointer);
+        buttonPlay.touchUp(touch, pointer);
         return super.touchUp(touch, pointer);
-    }
-
-    @Override
-    public void hide() {
-        super.hide();
-        bg.dispose();
-        atlas.dispose();
     }
 }
