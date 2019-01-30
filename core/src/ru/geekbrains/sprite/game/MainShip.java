@@ -1,6 +1,5 @@
 package ru.geekbrains.sprite.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -26,12 +25,15 @@ public class MainShip extends Sprite {
     private TextureRegion bulletRegion;
 
     private Sound sound;
+    private int pointer;
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound sound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletPool = bulletPool;
         this.sound = sound;
+        this.isPressedLeft = false;
+        this.isPressedRight = false;
         setHeightProportion(0.15f);
     }
 
@@ -95,22 +97,28 @@ public class MainShip extends Sprite {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        if (this.pointer != pointer || isPressedRight || isPressedLeft) return false;
         if (pos.x < touch.x) {
             moveRight();
+            this.isPressedRight = true;
         }
         if (pos.x > touch.x) {
             moveLeft();
+            this.isPressedLeft = true;
         }
         return super.touchDown(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        if (pos.x < touch.x) {
+        if (isPressedRight) {
+            isPressedRight = false;
             moveRight();
-        }
-        if (pos.x > touch.x) {
+        } else if (isPressedLeft) {
+            isPressedLeft = false;
             moveLeft();
+        } else {
+            stop();
         }
         return super.touchUp(touch, pointer);
     }
