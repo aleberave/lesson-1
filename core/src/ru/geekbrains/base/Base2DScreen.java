@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.math.MatrixUtils;
 import ru.geekbrains.math.Rect;
 
-public class Base2DScreen implements Screen, InputProcessor {
+public abstract class Base2DScreen implements Screen, InputProcessor {
 
 
     protected SpriteBatch batch;
@@ -20,14 +20,10 @@ public class Base2DScreen implements Screen, InputProcessor {
     private Rect worldBounds; // границы проекции мировых координат
     private Rect glBounds; // дефолтные границы проекции мир - gl
 
-    private Matrix4 worldToGl;
-    private Matrix3 screenToWorlds;
+    private Matrix4 worldToGl; // для batch-ера (3D) из мировой в GL
+    private Matrix3 screenToWorlds; // значение координат (2D) в системе событий
 
-    private Vector2 touch;
-
-    public Vector2 getTouch() {
-        return touch;
-    }
+    private Vector2 touch; // запоминает куда нажал пользователь
 
     @Override
     public void show() {
@@ -61,6 +57,11 @@ public class Base2DScreen implements Screen, InputProcessor {
         MatrixUtils.calcTransitionMatrix(worldToGl, worldBounds, glBounds);
         batch.setProjectionMatrix(worldToGl);
         MatrixUtils.calcTransitionMatrix(screenToWorlds, screenBounds, worldBounds);
+        resize(worldBounds);
+    }
+
+    public void resize(Rect worldBounds) {
+
     }
 
     @Override
@@ -126,7 +127,7 @@ public class Base2DScreen implements Screen, InputProcessor {
     }
 
     public boolean touchUp(Vector2 touch, int pointer) {
-//        System.out.println("touchUp touch.x = " + touch.x + " touch.y = " + touch.y);
+        System.out.println("touchUp touch.x = " + touch.x + " touch.y = " + touch.y);
         return false;
     }
 
