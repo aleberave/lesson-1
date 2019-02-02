@@ -69,7 +69,6 @@ public class EnemyEmitter {
 
     public void generate(float delta) {
         generateTimer += delta;
-        System.out.println("GT " + generateTimer + "         RND " + (int) random + "          GI " + generateInterval);
         if (generateTimer >= generateInterval && generateInterval > (int) random && (int) random < 4f) {
             generateTimer = 0f;
             random = Rnd.nextFloat(2, 6);
