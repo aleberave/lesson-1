@@ -13,7 +13,6 @@ import ru.geekbrains.math.Rect;
 
 public abstract class Base2DScreen implements Screen, InputProcessor {
 
-
     protected SpriteBatch batch;
 
     private Rect screenBounds; // границы области рисования в пикселях

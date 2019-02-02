@@ -1,23 +1,29 @@
 package ru.geekbrains.sprite.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.geekbrains.math.Rect;
 import ru.geekbrains.screen.MenuScreen;
 
-public class TouchExit extends ScaledTouchUpButton {
+public class ButtonExit extends ScaledTouchUpButton {
 
-    MenuScreen method_hide = new MenuScreen();
-
-    public TouchExit(TextureAtlas atlas) {
+    public ButtonExit(TextureAtlas atlas) {
         super(atlas.findRegion("btExit"));
-        pos.set(0.2f, -0.3f);
         setHeightProportion(0.15f);
     }
 
     @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        setBottom(worldBounds.getBottom() + 0.02f);
+        setLeft(worldBounds.getLeft() + 0.02f);
+    }
+
+    @Override
     public void action() {
-        method_hide.hide();
+        Gdx.app.exit();
     }
 
     @Override
