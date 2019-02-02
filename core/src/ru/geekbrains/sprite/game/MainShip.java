@@ -1,54 +1,62 @@
 package ru.geekbrains.sprite.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 
-public class MainShip extends Sprite {
+public class MainShip extends Ship {
 
-    private Rect worldBounds;
+    private static final int INVALID_POINTER = -1;
 
     private final Vector2 v0 = new Vector2(0.5f, 0);
-    private Vector2 v = new Vector2();
 
     private boolean isPressedLeft;
     private boolean isPressedRight;
 
-    private BulletPool bulletPool;
+    private int leftPointer = INVALID_POINTER;
+    private int rightPointer = INVALID_POINTER;
 
-    private TextureRegion bulletRegion;
-
-    private Sound sound;
-    private int pointer;
-
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound sound) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletPool = bulletPool;
-        this.sound = sound;
-        this.isPressedLeft = false;
-        this.isPressedRight = false;
+        this.reloadInterval = 0.2f;
+        this.shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         setHeightProportion(0.15f);
+        this.bulletV = new Vector2(0, 0.5f);
+        this.bulletHeight = 0.01f;
+        this.damage = 1;
+        this.hp = 100;
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        this.worldBounds = worldBounds;
         setBottom(worldBounds.getBottom() + 0.05f);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        updateShipWorldBounds();
         pos.mulAdd(v, delta);
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
+            reloadTimer = 0f;
+            shoot();
+        }
+        if (getRight() > worldBounds.getRight()) {
+            setRight(worldBounds.getRight());
+            stop();
+        }
+        if (getLeft() < worldBounds.getLeft()) {
+            setLeft(worldBounds.getLeft());
+            stop();
+        }
     }
 
     public boolean keyDown(int keycode) {
@@ -62,10 +70,6 @@ public class MainShip extends Sprite {
             case Input.Keys.RIGHT:
                 isPressedRight = true;
                 moveRight();
-                break;
-            case Input.Keys.SPACE:
-                sound.play();
-                shoot();
                 break;
         }
         return false;
@@ -97,28 +101,34 @@ public class MainShip extends Sprite {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        if (this.pointer != pointer || isPressedRight || isPressedLeft) return false;
-        if (pos.x < touch.x) {
-            moveRight();
-            this.isPressedRight = true;
-        }
-        if (pos.x > touch.x) {
+        if (touch.x < worldBounds.pos.x) {
+            if (leftPointer != INVALID_POINTER) return false;
+            leftPointer = pointer;
             moveLeft();
-            this.isPressedLeft = true;
+        } else {
+            if (rightPointer != INVALID_POINTER) return false;
+            rightPointer = pointer;
+            moveRight();
         }
         return super.touchDown(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        if (isPressedRight) {
-            isPressedRight = false;
-            moveRight();
-        } else if (isPressedLeft) {
-            isPressedLeft = false;
-            moveLeft();
-        } else {
-            stop();
+        if (pointer == leftPointer) {
+            leftPointer = INVALID_POINTER;
+            if (rightPointer != INVALID_POINTER) {
+                moveRight();
+            } else {
+                stop();
+            }
+        } else if (pointer == rightPointer) {
+            rightPointer = INVALID_POINTER;
+            if (leftPointer != INVALID_POINTER) {
+                moveLeft();
+            } else {
+                stop();
+            }
         }
         return super.touchUp(touch, pointer);
     }
@@ -135,21 +145,4 @@ public class MainShip extends Sprite {
         v.setZero();
     }
 
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, sound, pos, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
-    }
-
-    private void updateShipWorldBounds() {
-        if (getRight() >= worldBounds.getRight()) {
-            stop();
-            pos.x = (float) getRight() - pos.x;
-            pos.x = worldBounds.getRight() - pos.x - 0.0001f;
-        }
-        if (getLeft() <= worldBounds.getLeft()) {
-            stop();
-            pos.x = (float) getLeft() + Math.abs(pos.x);
-            pos.x = worldBounds.getLeft() + Math.abs(pos.x) + 0.0001f;
-        }
-    }
 }
