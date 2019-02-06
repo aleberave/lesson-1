@@ -8,6 +8,7 @@ import ru.geekbrains.base.Sprite;
 public abstract class ScaledTouchUpButton extends Sprite {
 
     private static final float PRESS_SCALE = 0.9f;
+
     private int pointer;
     private boolean isPressed;
 
@@ -15,9 +16,12 @@ public abstract class ScaledTouchUpButton extends Sprite {
         super(region);
     }
 
+
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        if(isPressed || !isMe(touch)) return false;
+        if (isPressed || !isMe(touch)) {
+            return false;
+        }
         this.pointer = pointer;
         this.scale = PRESS_SCALE;
         this.isPressed = true;
@@ -26,8 +30,12 @@ public abstract class ScaledTouchUpButton extends Sprite {
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        if(this.pointer != pointer || !isPressed) return false;
-        if(isMe(touch)) action();
+        if (this.pointer != pointer || !isPressed) {
+            return false;
+        }
+        if (isMe(touch)) {
+            action();
+        }
         this.isPressed = false;
         scale = 1f;
         return super.touchUp(touch, pointer);

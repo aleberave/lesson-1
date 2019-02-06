@@ -1,7 +1,7 @@
 package ru.geekbrains.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,13 +11,15 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.base.Base2DScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
+import ru.geekbrains.pool.EnemyPool;
+import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Star;
+import ru.geekbrains.sprite.game.Explosion;
 import ru.geekbrains.sprite.game.MainShip;
+import ru.geekbrains.utils.EnemyEmitter;
 
 public class GameScreen extends Base2DScreen {
-
-    private int game;
 
     private TextureAtlas atlas;
     private Texture bg;
@@ -26,17 +28,20 @@ public class GameScreen extends Base2DScreen {
     private MainShip mainShip;
 
     private BulletPool bulletPool;
+    private ExplosionPool explosionPool;
+    private EnemyPool enemyPool;
 
-    private Sound vacuum;
-    private Sound lazer;
+    private EnemyEmitter enemyEmitter;
+
+    private Music music;
 
     @Override
     public void show() {
         super.show();
-        vacuum = Gdx.audio.newSound(Gdx.files.internal("music/vacuum.mp3"));
-        vacuum.play(0.01f);
-        vacuum.loop();
-        lazer = Gdx.audio.newSound(Gdx.files.internal("music/lazer.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.8f);
+        music.play();
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
@@ -45,7 +50,11 @@ public class GameScreen extends Base2DScreen {
             star[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        mainShip = new MainShip(atlas, bulletPool, lazer);
+        explosionPool = new ExplosionPool(atlas);
+        enemyPool = new EnemyPool(bulletPool);
+        mainShip = new MainShip(atlas, bulletPool);
+
+        enemyEmitter = new EnemyEmitter(atlas, enemyPool, worldBounds);
     }
 
     @Override
@@ -62,10 +71,15 @@ public class GameScreen extends Base2DScreen {
         }
         mainShip.update(delta);
         bulletPool.updateActiveSprites(delta);
+        explosionPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
+        enemyEmitter.generate(delta);
     }
 
-    public void deleteAllDestroyed(){
-        bulletPool.freeAllDestrouedActiveSprites();
+    public void deleteAllDestroyed() {
+        bulletPool.freeAllDestroyedActiveSprites();
+        explosionPool.freeAllDestroyedActiveSprites();
+        enemyPool.freeAllDestroyedActiveSprites();
     }
 
     public void draw() {
@@ -78,6 +92,8 @@ public class GameScreen extends Base2DScreen {
         }
         mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        explosionPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -89,6 +105,18 @@ public class GameScreen extends Base2DScreen {
             star[i].resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+    }
+
+    @Override
+    public void dispose() {
+        bg.dispose();
+        atlas.dispose();
+        bulletPool.dispose();
+        explosionPool.dispose();
+        enemyPool.dispose();
+        mainShip.dispose();
+        music.dispose();
+        super.dispose();
     }
 
     @Override
@@ -105,6 +133,8 @@ public class GameScreen extends Base2DScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(0.15f, touch);
         mainShip.touchDown(touch, pointer);
         return super.touchDown(touch, pointer);
     }
@@ -113,15 +143,5 @@ public class GameScreen extends Base2DScreen {
     public boolean touchUp(Vector2 touch, int pointer) {
         mainShip.touchUp(touch, pointer);
         return super.touchUp(touch, pointer);
-    }
-
-    @Override
-    public void dispose() {
-        bg.dispose();
-        atlas.dispose();
-        bulletPool.dispose();
-        vacuum.dispose();
-        lazer.dispose();
-        super.dispose();
     }
 }
