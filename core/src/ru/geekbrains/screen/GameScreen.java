@@ -208,7 +208,9 @@ public class GameScreen extends Base2DScreen {
         if(!mainShip.isDestroyed()) {
             mainShip.touchDown(touch, pointer);
         }
-        buttonNewGame.touchDown(touch, pointer);
+        if(mainShip.isDestroyed()) {
+            buttonNewGame.touchDown(touch, pointer);
+        }
         return super.touchDown(touch, pointer);
     }
 
@@ -217,7 +219,9 @@ public class GameScreen extends Base2DScreen {
         if(!mainShip.isDestroyed()) {
             mainShip.touchUp(touch, pointer);
         }
-        buttonNewGame.touchUp(touch, pointer);
+        if(mainShip.isDestroyed()) {
+            buttonNewGame.touchUp(touch, pointer);
+        }
         return super.touchUp(touch, pointer);
     }
 
