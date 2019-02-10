@@ -3,7 +3,7 @@ package ru.geekbrains.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import ru.geekbrains.Lesson6HW;
+import ru.geekbrains.Lesson7HW;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
@@ -12,6 +12,6 @@ public class DesktopLauncher {
         config.width = 400;
         config.height = (int) (config.width / aspect);
 //		config.resizable = false; // нельзя изменять размер экрана
-        new LwjglApplication(new Lesson6HW(), config);
+        new LwjglApplication(new Lesson7HW(), config);
     }
 }
