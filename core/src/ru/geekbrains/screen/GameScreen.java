@@ -16,16 +16,19 @@ import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.pool.ExplosionPool;
+import ru.geekbrains.pool.PlusHPPool;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.sprite.game.Bullet;
 import ru.geekbrains.sprite.game.Enemy;
 import ru.geekbrains.sprite.game.MainShip;
 import ru.geekbrains.sprite.game.MessageGameOver;
+import ru.geekbrains.sprite.game.PlusHP;
 import ru.geekbrains.sprite.game.ProgressBar;
 import ru.geekbrains.sprite.game.StartNewGame;
 import ru.geekbrains.utils.EnemyEmitter;
 import ru.geekbrains.utils.Font;
+import ru.geekbrains.utils.PlusHpEmitter;
 
 public class GameScreen extends Base2DScreen {
 
@@ -52,6 +55,9 @@ public class GameScreen extends Base2DScreen {
 
     private EnemyEmitter enemyEmitter;
 
+    private PlusHPPool plusHPPool;
+    private PlusHpEmitter plusHpEmitter;
+
     private Music music;
 
     private State state;
@@ -76,6 +82,7 @@ public class GameScreen extends Base2DScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        atlas2 = new TextureAtlas("hp/boxes.pack");
         star = new Star[64];
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
@@ -84,8 +91,10 @@ public class GameScreen extends Base2DScreen {
         explosionPool = new ExplosionPool(atlas);
         mainShip = new MainShip(atlas, bulletPool, explosionPool, worldBounds);
         enemyPool = new EnemyPool(bulletPool, worldBounds, explosionPool, mainShip);
-
         enemyEmitter = new EnemyEmitter(atlas, enemyPool, worldBounds);
+        plusHPPool = new PlusHPPool(worldBounds, mainShip);
+        plusHpEmitter = new PlusHpEmitter(atlas2, plusHPPool, worldBounds, this);
+
         messageGameOver = new MessageGameOver(atlas);
         startNewGame = new StartNewGame(atlas, this);
         atlas2 = new TextureAtlas("progressbar/mys.pack");
@@ -115,9 +124,12 @@ public class GameScreen extends Base2DScreen {
         switch (state){
             case PLAYING:
                 mainShip.update(delta);
+                mainShip.changeLevelAddHp(levels);
                 bulletPool.updateActiveSprites(delta);
                 enemyPool.updateActiveSprites(delta);
                 enemyEmitter.generate(delta, frags);
+                plusHPPool.updateActiveSprites(delta);
+                plusHpEmitter.generate(delta);
                 break;
             case GAME_OVER:
                 break;
@@ -169,6 +181,13 @@ public class GameScreen extends Base2DScreen {
                     }
                 }
             }
+
+            List<PlusHP> plusHPList = plusHPPool.getActiveObjects();
+            for (PlusHP plusHP : plusHPList) {
+                if(mainShip.isHpCollisionUp(plusHP) || mainShip.isHpCollisionDown(plusHP)){
+                    mainShip.addHp(plusHP);
+                }
+            }
         }
     }
 
@@ -179,6 +198,7 @@ public class GameScreen extends Base2DScreen {
         bulletPool.freeAllDestroyedActiveSprites();
         explosionPool.freeAllDestroyedActiveSprites();
         enemyPool.freeAllDestroyedActiveSprites();
+        plusHPPool.freeAllDestroyedActiveSprites();
     }
 
     private void draw() {
@@ -194,6 +214,7 @@ public class GameScreen extends Base2DScreen {
                 mainShip.draw(batch);
                 bulletPool.drawActiveSprites(batch);
                 enemyPool.drawActiveSprites(batch);
+                plusHPPool.drawActiveSprites(batch);
                 break;
             case GAME_OVER:
                 messageGameOver.draw(batch);
@@ -242,6 +263,7 @@ public class GameScreen extends Base2DScreen {
         bulletPool.dispose();
         explosionPool.dispose();
         enemyPool.dispose();
+        plusHPPool.dispose();
         mainShip.dispose();
         music.dispose();
         font.dispose();
@@ -294,5 +316,10 @@ public class GameScreen extends Base2DScreen {
         bulletPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
         explosionPool.freeAllActiveObjects();
+        plusHPPool.freeAllActiveObjects();
+    }
+
+    public int getLevels() {
+        return levels;
     }
 }

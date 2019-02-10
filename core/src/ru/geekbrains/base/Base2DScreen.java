@@ -88,45 +88,45 @@ public abstract class Base2DScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        System.out.println("keyDown keycode = " + keycode);
+//        System.out.println("keyDown keycode = " + keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        System.out.println("keyUp keycode = " + keycode);
+//        System.out.println("keyUp keycode = " + keycode);
         return false;
     }
 
     @Override
     public boolean keyTyped(char character) {
-        System.out.println("keyTyped character = " + character);
+//        System.out.println("keyTyped character = " + character);
         return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("touchDown screenX = " + screenX + " screenY = " + screenY);
+//        System.out.println("touchDown screenX = " + screenX + " screenY = " + screenY);
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorlds);
         touchDown(touch, pointer);
         return false;
     }
 
     public boolean touchDown(Vector2 touch, int pointer) {
-        System.out.println("touchDown touch.x = " + touch.x + " touch.y = " + touch.y);
+//        System.out.println("touchDown touch.x = " + touch.x + " touch.y = " + touch.y);
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        System.out.println("touchUp screenX = " + screenX + " screenY = " + screenY);
+//        System.out.println("touchUp screenX = " + screenX + " screenY = " + screenY);
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorlds);
         touchUp(touch, pointer);
         return false;
     }
 
     public boolean touchUp(Vector2 touch, int pointer) {
-        System.out.println("touchUp touch.x = " + touch.x + " touch.y = " + touch.y);
+//        System.out.println("touchUp touch.x = " + touch.x + " touch.y = " + touch.y);
         return false;
     }
 

@@ -1,0 +1,40 @@
+
+boxes.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hpbox_empty
+  rotate: false
+  xy: 1, 3
+  size: 174, 91
+  orig: 174, 91
+  offset: 0, 0
+  index: -1
+hpbox_full
+  rotate: false
+  xy: 177, 3
+  size: 174, 91
+  orig: 174, 91
+  offset: 0, 0
+  index: -1
+hpbox_half
+  rotate: false
+  xy: 353, 3
+  size: 174, 91
+  orig: 174, 91
+  offset: 0, 0
+  index: -1
+hp
+  rotate: false
+  xy: 529, 3
+  size: 172, 91
+  orig: 172, 91
+  offset: 0, 0
+  index: -1
+hp_black
+  rotate: false
+  xy: 703, 1
+  size: 172, 93
+  orig: 172, 93
+  offset: 0, 0
+  index: -1

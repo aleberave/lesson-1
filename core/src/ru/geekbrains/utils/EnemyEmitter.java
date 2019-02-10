@@ -49,6 +49,7 @@ public class EnemyEmitter {
     private Rect worldBounds;
 
     private int level;
+    private int level0 = 1;
 
     public EnemyEmitter(TextureAtlas atlas, EnemyPool enemyPool, Rect worldBounds) {
         this.enemyPool = enemyPool;

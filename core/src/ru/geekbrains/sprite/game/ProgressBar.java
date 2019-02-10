@@ -23,16 +23,30 @@ public class ProgressBar extends Sprite {
         super.update(delta);
         frameTimer += delta;
         if(frameTimer >= frameInterval){
-            if (mainShip.hp == 0) {
-                frame = 0;
-            } else if (mainShip.hp > 0 && mainShip.hp < 25) {
-                frame = 1;
-            } else if (mainShip.hp >= 25 && mainShip.hp < 50) {
-                frame = 2;
-            } else if (mainShip.hp >= 50 && mainShip.hp < 75) {
-                frame = 3;
+            if(mainShip.hp > 100){
+                if (mainShip.hp == 0) {
+                    frame = 0;
+                } else if (mainShip.hp > 0 && mainShip.hp < (mainShip.getHpMax() * 0.25f)) {
+                    frame = 1;
+                } else if (mainShip.hp >= (mainShip.getHpMax() * 0.25f) && mainShip.hp < (mainShip.getHpMax() * 0.5f)) {
+                    frame = 2;
+                } else if (mainShip.hp >= (mainShip.getHpMax() * 0.5f) && mainShip.hp < (mainShip.getHpMax() * 0.75f)) {
+                    frame = 3;
+                } else {
+                    frame = 4;
+                }
             } else {
-                frame = 4;
+                if (mainShip.hp == 0) {
+                    frame = 0;
+                } else if (mainShip.hp > 0 && mainShip.hp < 25) {
+                    frame = 1;
+                } else if (mainShip.hp >= 25 && mainShip.hp < 50) {
+                    frame = 2;
+                } else if (mainShip.hp >= 50 && mainShip.hp < 75) {
+                    frame = 3;
+                } else {
+                    frame = 4;
+                }
             }
         }
     }
