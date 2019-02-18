@@ -1,4 +1,4 @@
-package ru.geekbrains.sprite.menu;
+package ru.geekbrains.base;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;

@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.ExplosionPool;
+import ru.geekbrains.screen.GameScreen;
+import ru.geekbrains.utils.EnemyEmitter;
 
 public class MainShip extends Ship {
 
@@ -22,8 +24,13 @@ public class MainShip extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
+    private int level0 = 1;
+    private int hpMax = 100;
+    private PlusHP plusHP;
+
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.worldBounds = worldBounds;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
@@ -33,7 +40,14 @@ public class MainShip extends Ship {
         this.bulletV = new Vector2(0, 0.5f);
         this.bulletHeight = 0.01f;
         this.damage = 1;
+        startNewGame();
+    }
+
+    public void startNewGame(){
+        stop();
+        pos.x = worldBounds.pos.x;
         this.hp = 100;
+        flushDestroy();
     }
 
     @Override
@@ -135,12 +149,48 @@ public class MainShip extends Ship {
         return super.touchUp(touch, pointer);
     }
 
-    public boolean isBulletCollision(Rect bullet){
-        return !( bullet.getRight() < getLeft()
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
                 || bullet.getLeft() > getRight()
                 || bullet.getBottom() > pos.y
                 || bullet.getTop() < getBottom()
         );
+    }
+
+    public boolean isHpCollisionUp(Rect plusHP) {
+        return !(plusHP.getRight() < getLeft()
+                || plusHP.getLeft() > getRight()
+                || plusHP.getBottom() > pos.y
+                || plusHP.getTop() < getBottom()
+        );
+    }
+
+    public boolean isHpCollisionDown(Rect plusHP){
+        return !( plusHP.getRight() < getLeft()
+                || plusHP.getLeft() > getRight()
+                || plusHP.getBottom() > getTop()
+                || plusHP.getTop() < pos.y
+        );
+    }
+
+    public void addHp(PlusHP hpPlus){
+        plusHP = hpPlus;
+        hp += hpPlus.hp;
+        if(hp >= hpMax){
+            hp = hpMax;
+        } else {
+            setHp(hp);
+        }
+        hpPlus.heartSound.play();
+        hpPlus.destroy();
+    }
+
+    public void changeLevelAddHp(int level){
+        if(level > level0){
+            level0 = level;
+            hpMax = hpMax + 10;
+            setHp(getHp() + 10);
+        }
     }
 
     @Override
@@ -161,4 +211,12 @@ public class MainShip extends Ship {
         v.setZero();
     }
 
+    public int getHpMax() {
+        return hpMax;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
 }

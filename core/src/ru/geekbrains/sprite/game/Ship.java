@@ -72,6 +72,7 @@ public class Ship extends Sprite {
         damageTimer = 0f;
         hp -= damage;
         if(hp <= 0){
+            hp = 0;
             destroy();
         }
     }
@@ -82,5 +83,13 @@ public class Ship extends Sprite {
 
     public void dispose() {
         shootSound.dispose();
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 }
